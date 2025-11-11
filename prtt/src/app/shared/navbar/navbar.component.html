@@ -1,0 +1,14 @@
+<nav class="extranet-navbar">
+    <ul class="extranet-navbar-liste">
+        <a href=""><li class="extranet-navbar-liste_li">LOGO</li></a>
+    </ul>
+    <ul class="extranet-navbar-liste">
+        <a href=""><li class="extranet-navbar-liste_li" [class.extranet-navbar_selected]="page == 'home'"><svg-house />Accueil</li></a>
+        <a href=""><li class="extranet-navbar-liste_li" [class.extranet-navbar_selected]="page == 'news'"><svg-newspaper />Actualités</li></a>
+        <a href=""><li class="extranet-navbar-liste_li" [class.extranet-navbar_selected]="page == 'event'"><svg-star />Évènements</li></a>
+        <a href=""><li class="extranet-navbar-liste_li" [class.extranet-navbar_selected]="page == 'team'"><svg-people />Équipes</li></a>
+        <a href=""><li class="extranet-navbar-liste_li" [class.extranet-navbar_selected]="page == 'schedule'"><svg-calendar />Calendrier</li></a>
+        <a href=""><li class="extranet-navbar-liste_li" [class.extranet-navbar_selected]="page == 'tournament'"><svg-cup />Tournoi</li></a>
+        <a href=""><li class="extranet-navbar-liste_li" [class.extranet-navbar_selected]="page == 'infos'"><svg-infos />Infos Pratiques</li></a>
+    </ul>
+</nav>

@@ -1,0 +1,57 @@
+.extranet-navbar {
+    display: flex;
+    align-items: center;
+    position: fixed;
+    justify-content: space-between;
+    left: 0;
+    top: 0;
+    height: 80px;
+    width: 100%;
+    padding: 0 9rem;
+    border-bottom: 1px solid rgb(128, 128, 128, .2);
+    background-color: rgb(255, 255, 255, .8);
+
+    &-liste {
+        display: flex;
+        list-style-type: none;
+        gap: 6px;
+
+        &_li {
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+            font-weight: 500;
+            gap: 12px;
+            font-size: 0.9rem;
+            height: 38px;
+            padding: 0 1rem 0 1rem;
+            border-radius: 8px;
+            stroke: black;
+
+            &:not(.extranet-navbar_selected):hover {
+                background-color: rgb(128, 128, 128, .08);
+                
+            }
+
+            &:is(.extranet-navbar_selected):hover::ng-deep {
+                background-color: rgb(255, 216, 166);
+                color: black;
+                stroke: black;
+            }
+        }
+    }
+
+    &_selected {
+        color: rgb(194, 65, 12,);
+        background-color: rgb(255, 237, 213);
+
+        ::ng-deep {
+            stroke: rgb(194, 65, 12);
+        }
+    }
+}
+
+a {
+    text-decoration: none;
+    color: black;
+}
