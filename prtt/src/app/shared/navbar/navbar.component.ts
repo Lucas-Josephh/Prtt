@@ -6,14 +6,16 @@ import { PeopleVGComponent } from '../svg/people/people.component';
 import { CalendarSVGComponent } from '../svg/calendar/calendar.component';
 import { CupSVGComponent } from '../svg/cup/cup.component';
 import { InfosSVGComponent } from '../svg/infos/infos.component';
+import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'extranet-navbar',
-  imports: [HouseSVGComponent, NewsPaperSVGComponent, StarSVGComponent, PeopleVGComponent, CalendarSVGComponent, CupSVGComponent, InfosSVGComponent],
+  imports: [RouterLink, HouseSVGComponent, NewsPaperSVGComponent, StarSVGComponent, PeopleVGComponent, CalendarSVGComponent, CupSVGComponent, InfosSVGComponent],
   templateUrl: './navbar.component.html',
   styleUrl: './navbar.component.scss'
 })
 
 export class NavbarComponent {
   @Input() page = "home";
+  @Input() margin = true;
 }

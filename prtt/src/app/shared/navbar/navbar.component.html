@@ -3,8 +3,8 @@
         <a href=""><li class="extranet-navbar-liste_li">LOGO</li></a>
     </ul>
     <ul class="extranet-navbar-liste">
-        <a href=""><li class="extranet-navbar-liste_li" [class.extranet-navbar_selected]="page == 'home'"><svg-house />Accueil</li></a>
-        <a href=""><li class="extranet-navbar-liste_li" [class.extranet-navbar_selected]="page == 'news'"><svg-newspaper />Actualités</li></a>
+        <a routerLink=""><li class="extranet-navbar-liste_li" [class.extranet-navbar_selected]="page == 'home'"><svg-house />Accueil</li></a>
+        <a routerLink="news"><li class="extranet-navbar-liste_li" [class.extranet-navbar_selected]="page == 'news'"><svg-newspaper />Actualités</li></a>
         <a href=""><li class="extranet-navbar-liste_li" [class.extranet-navbar_selected]="page == 'event'"><svg-star />Évènements</li></a>
         <a href=""><li class="extranet-navbar-liste_li" [class.extranet-navbar_selected]="page == 'team'"><svg-people />Équipes</li></a>
         <a href=""><li class="extranet-navbar-liste_li" [class.extranet-navbar_selected]="page == 'schedule'"><svg-calendar />Calendrier</li></a>
@@ -13,4 +13,4 @@
     </ul>
 </nav>
 
-<div class="extranet-navbar-marge"></div>
+<div [class.extranet-navbar-margin]="margin"></div>
