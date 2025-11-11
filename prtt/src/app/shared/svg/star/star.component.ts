@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
 
 @Component({
   selector: 'svg-star',
@@ -6,4 +6,6 @@ import { Component } from '@angular/core';
   templateUrl: './star.component.html',
 })
 
-export class StarSVGComponent {}
+export class StarSVGComponent {
+  @Input() size = 18;
+}

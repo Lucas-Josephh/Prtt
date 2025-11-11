@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
 
 @Component({
   selector: 'svg-calendar',
@@ -6,4 +6,6 @@ import { Component } from '@angular/core';
   templateUrl: './calendar.component.html',
 })
 
-export class CalendarSVGComponent {}
+export class CalendarSVGComponent {
+  @Input() size = 18;
+}

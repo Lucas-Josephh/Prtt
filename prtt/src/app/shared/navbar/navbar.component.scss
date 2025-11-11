@@ -1,3 +1,5 @@
+$heightNav: 80px;
+
 .extranet-navbar {
     display: flex;
     align-items: center;
@@ -5,11 +7,16 @@
     justify-content: space-between;
     left: 0;
     top: 0;
-    height: 80px;
+    height: $heightNav;
     width: 100%;
     padding: 0 9rem;
     border-bottom: 1px solid rgb(128, 128, 128, .2);
-    background-color: rgb(255, 255, 255, .8);
+    background-color: rgb(255, 255, 255);
+    z-index: 999;
+
+    &-margin {
+        height: $heightNav - 8;
+    }
 
     &-liste {
         display: flex;
@@ -22,8 +29,8 @@
             cursor: pointer;
             font-weight: 500;
             gap: 12px;
-            font-size: 0.9rem;
-            height: 38px;
+            font-size: 0.78rem;
+            height: 34px;
             padding: 0 1rem 0 1rem;
             border-radius: 8px;
             stroke: black;
