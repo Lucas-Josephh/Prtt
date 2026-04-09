@@ -1,36 +1,130 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 🏓 PRTT Website – Perpignan Roussillon Tennis de Table
 
-## Getting Started
+## 📌 Description
 
-First, run the development server:
+Ce projet est le site officiel du **Perpignan Roussillon Tennis de Table (PRTT)**.
+Il a été entièrement refondu avec une nouvelle interface moderne, fluide et responsive, afin d’améliorer l’expérience utilisateur et la visibilité du club.
+
+Le projet est actuellement développé en **frontend avec Next.js**, et sera prochainement complété par une **API backend en NestJS** ainsi qu’une base de données **PostgreSQL**.
+
+---
+
+## 🚀 Stack Technique
+
+### Frontend
+
+* Next.js
+* React
+* TypeScript
+* SCSS / CSS Modules
+
+### Backend (à venir)
+
+* NestJS
+* PostgreSQL
+
+---
+
+## 🎯 Objectifs
+
+* Moderniser l’image du club
+* Offrir une navigation fluide et intuitive
+* Mettre en avant l’histoire, les actualités et les événements
+* Préparer une architecture scalable avec backend dédié
+
+---
+
+## 📂 Structure du projet
+
+```
+/app          → Pages Next.js (App Router)
+/components   → Composants réutilisables
+/styles       → Fichiers SCSS / styles globaux
+/public       → Assets statiques (images, logos)
+```
+
+---
+
+## ⚙️ Installation
+
+Clone le projet :
+
+```bash
+git clone https://github.com/ton-repo/prtt-website.git
+cd prtt-website
+```
+
+Installe les dépendances :
+
+```bash
+npm install
+```
+
+Lance le serveur de développement :
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Le site sera accessible sur :
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```
+http://localhost:3000
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+---
 
-## Learn More
+## 🛠️ Scripts disponibles
 
-To learn more about Next.js, take a look at the following resources:
+```bash
+npm run dev       # Lance le serveur de développement
+npm run build     # Build de production
+npm run start     # Lance le build
+npm run lint      # Vérification du code
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+---
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## 📸 Fonctionnalités principales
 
-## Deploy on Vercel
+* Interface moderne et responsive
+* Composants dynamiques (timeline / histoire du club)
+* Gestion d’état pour sélection et affichage dynamique
+* Animations UI (transitions, interactions)
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+---
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## 🔮 Roadmap
+
+* [ ] Mise en place du backend avec NestJS
+* [ ] Connexion à PostgreSQL
+* [ ] Gestion des utilisateurs (admin / membres)
+* [ ] Ajout d’un système d’actualités dynamique
+* [ ] Intégration d’un calendrier d’événements
+* [ ] Optimisation SEO
+
+---
+
+## 🤝 Contribution
+
+Les contributions sont les bienvenues !
+
+1. Fork le projet
+2. Crée une branche (`feature/ma-feature`)
+3. Commit tes changements
+4. Push et ouvre une Pull Request
+
+---
+
+## 📄 Licence
+
+Ce projet est sous licence MIT.
+
+---
+
+## 👤 Auteur
+
+Développé dans le cadre du club **PRTT**
+Refonte complète de l’interface et architecture moderne orientée scalabilité.
+
+---
