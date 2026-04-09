@@ -45,35 +45,6 @@ Le projet est actuellement développé en **frontend avec Next.js**, et sera pro
 
 ---
 
-## ⚙️ Installation
-
-Clone le projet :
-
-```bash
-git clone https://github.com/ton-repo/prtt-website.git
-cd prtt-website
-```
-
-Installe les dépendances :
-
-```bash
-npm install
-```
-
-Lance le serveur de développement :
-
-```bash
-npm run dev
-```
-
-Le site sera accessible sur :
-
-```
-http://localhost:3000
-```
-
----
-
 ## 🛠️ Scripts disponibles
 
 ```bash
