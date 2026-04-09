@@ -99,9 +99,6 @@ npm run lint      # Vérification du code
 * [ ] Mise en place du backend avec NestJS
 * [ ] Connexion à PostgreSQL
 * [ ] Gestion des utilisateurs (admin / membres)
-* [ ] Ajout d’un système d’actualités dynamique
-* [ ] Intégration d’un calendrier d’événements
-* [ ] Optimisation SEO
 
 ---
 
