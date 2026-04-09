@@ -1,0 +1,24 @@
+@media (max-width: 640px) {
+    .app-desk-main {
+        &-boss {
+            flex-direction: column;
+
+            &-img {
+                width: 100% !important;
+                height: 12rem !important;
+            }
+        }
+    }
+}
+
+@media (max-width: 1024px) {
+    .app-desk-main-members {
+        grid-template-columns: repeat(3, 1fr) !important;
+    }
+}
+
+@media (max-width: 768px) {
+    .app-desk-main-members {
+        grid-template-columns: repeat(2, 1fr) !important;
+    }
+}

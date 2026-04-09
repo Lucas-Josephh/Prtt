@@ -1,0 +1,15 @@
+@media (max-width: 1024px) {
+    .navbar-list {
+        display: none !important;
+    }
+
+    .navbar-mobile {
+        display: block !important;
+    }
+}
+
+@media (min-width: 1024px) {
+    .navbar-mobile-filter, .navbar-mobile-container {
+        display: none !important;
+    }
+}

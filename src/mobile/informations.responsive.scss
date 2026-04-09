@@ -1,0 +1,17 @@
+@media (max-width: 1024px) {
+    .app-information-main {
+        flex-direction: column;
+    }
+
+    .app-information-main-detail {
+        width: 100% !important;
+    }
+}
+
+@media (max-width: 640px) {
+    .app-information-main-detail {
+        grid-template-columns: repeat(1, 1fr) !important;
+    }
+}
+
+

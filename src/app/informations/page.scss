@@ -1,0 +1,124 @@
+@use "../var.scss" as var;
+@use "../../mobile//informations.responsive.scss";
+
+.app-information {
+    &-header {
+        width: 100%;
+        background-color: #1e3a5f;
+        padding: 2rem 1rem 2rem 1rem;
+
+        &-mark {
+            display: flex;
+            flex-direction: column;
+
+            &_title {
+                color: #fb923c;
+                font-weight: 600;
+                text-transform: uppercase;
+                font-size: .75rem;
+                margin: 0;
+            }
+
+            &_subtitle {
+                color: white;
+                font-weight: 900;
+                font-size: 1.875rem;
+                margin: 0;
+            }
+        }
+    }
+
+    &-main {
+        display: flex;
+        gap: 1.5rem;
+        margin-left: var(--nav-height);
+        margin-right: var(--nav-height);
+        margin-top: 2rem;
+
+        &-detail {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1rem;
+            width: 118%;
+            height: 100%;
+        }
+
+        &-location {
+            
+            &-container {
+                border: 1px solid #e5e5e5;
+                height: max-content;
+                padding: 1.25rem;
+                border-radius: .25rem;
+                margin-bottom: 1rem;
+                
+                &-mark {
+                    display: flex;
+                    gap: .5rem;
+                    text-decoration: none;
+                    
+                    &_img {
+                        border: 2px solid #fb923c;
+                        border-radius: .25rem;
+                        width: 3rem;
+                        height: 3rem;
+                    }
+                    
+                    &-info {
+                        display: flex;
+                        flex-direction: column;
+
+                        &_title {
+                            margin: 0;
+                            font-weight: 900;
+                            font-size: 1.125rem;
+                            color: #1e3a5f;
+                        }
+
+                        &_subtitle {
+                            color: #fb923c;
+                            font-size: 9px;
+                            font-weight: inherit;
+                            text-transform: uppercase;
+                            margin: 0;
+                            margin-top: .25rem;
+                        }
+                    }
+                }
+            
+
+                &_description {
+                    color: #6b7280;
+                    line-height: 1.625;
+                    font-size: .875rem;
+                    margin: 0;
+                    margin-top: .5rem;
+                    margin-bottom: 1rem;
+                }
+
+                &-network {
+                    display: flex;
+                    gap: .5rem;
+                }
+            }
+
+            &-iframe {
+                border: 1px solid #e5e5e5;
+                overflow: hidden;
+                border: 0;
+                border-radius: .5rem;
+                width: 100%;
+                height: 14rem;
+            }
+
+            &_description {
+                display: flex;
+                align-items: center;
+                color: #6b7280;
+                gap: .25rem;
+                font-size: .75rem;
+                line-height: 1rem;
+            }
+        }
+    }
+}

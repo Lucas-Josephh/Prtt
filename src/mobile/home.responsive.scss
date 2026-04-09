@@ -1,0 +1,34 @@
+@media (max-width: 640px) {
+    .app-home-history-container {
+        &-line {
+            display: none;
+        }
+
+        &-bubble {
+            display: grid !important;
+            grid-template-columns: repeat(4, 1fr) !important;
+        }
+    }
+
+    .app-home-news {
+        grid-template-columns: repeat(1, 1fr) !important;
+    }
+}
+
+@media (max-width: 1024px) {
+    .app-home {
+        &-card {
+            grid-template-columns: repeat(2, 1fr) !important;
+        }
+
+        &-skill {
+            grid-template-columns: repeat(2, 1fr) !important;
+        }
+    }
+}
+
+@media (min-width: 640px) and (max-width: 1024px) {
+    .app-home-news {
+        grid-template-columns: repeat(2, 1fr) !important;
+    }
+}

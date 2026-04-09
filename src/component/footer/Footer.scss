@@ -1,0 +1,103 @@
+@use "../../mobile/footer.responsive.scss";
+
+.extranet-footer {
+    display: flex;
+    width: 100%;
+    background-color: #1e3a5f;
+    padding: 2.5rem 1.5rem 2.5rem 1.5rem;
+    margin-top: 4rem;
+
+    &-element {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        width: 100%;
+
+        &-section {
+            display: flex;
+            flex-wrap: wrap;
+            flex-direction: column;
+
+            &-mark {
+                display: flex;
+                gap: .5rem;
+
+                &_img {
+                    border: 2px solid #fb923c;
+                    border-radius: .25rem;
+                    width: 3rem;
+                    height: 3rem;
+                }
+
+                &-club {
+                    display: flex;
+                    flex-direction: column;
+
+                    &_title {
+                        margin: 0;
+                        font-weight: 900;
+                        font-size: 1.25rem;
+                        color: white;
+                    }
+
+                    &_subtitle {
+                        color: #fb923c;
+                        font-size: .75rem;
+                        font-weight: inherit;
+                        text-transform: uppercase;
+                        margin: 0;
+                        margin-top: .25rem;
+                    }
+                }
+
+                &_description {
+                    color: #ffffff80;
+                    font-size: .875rem;
+
+                }
+            }
+
+            &-content {
+                display: flex;
+                justify-content: space-between;
+                width: 100%;
+
+                &-container {
+                    display: flex;
+                    justify-content: space-between;
+                    width: 100%;
+
+                    &-div {
+                        &_title {
+                            color: #fb923c;
+                            text-transform: uppercase;
+                            font-weight: 700;
+                            font-size: .75rem;
+                            margin-bottom: .75rem;
+                        }
+                        
+                        &-contain {
+                            display: flex;
+                            flex-direction: column;
+                            gap: .25rem;
+
+                            &_text {
+                                color: #ffffff80;
+                                font-size: .875rem;
+                                text-decoration: none;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    &_link {
+        width: max-content;
+        cursor: pointer;
+
+        &:hover {
+            color: #ffffffcc;
+        }
+    }
+}

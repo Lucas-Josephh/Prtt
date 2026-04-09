@@ -1,0 +1,190 @@
+@use "../var.scss" as var;
+@use "../../mobile/tournament.responsive.scss";
+
+.app-tournament {
+    &-header {
+        width: 100%;
+        background-color: #1e3a5f;
+        padding: 2rem 1rem 2rem 1rem;
+
+        &-mark {
+            display: flex;
+            flex-direction: column;
+
+            &_title {
+                color: #fb923c;
+                font-weight: 600;
+                text-transform: uppercase;
+                font-size: .75rem;
+                margin: 0;
+            }
+
+            &_subtitle {
+                color: white;
+                font-weight: 900;
+                font-size: 1.875rem;
+                margin: 0;
+            }
+        }
+    }
+
+    &-main {
+        display: flex;
+        flex-direction: column;
+        margin-left: var(--nav-height);
+        margin-right: var(--nav-height);
+        margin-top: 2rem;
+
+        &-head {
+            display: flex;
+            align-items: center;
+            gap: .5rem;
+
+            &_title {
+                position: relative;
+                text-transform: uppercase;
+                font-size: 1.25rem;
+                font-weight: 900;
+                line-height: 1.75rem;
+                color: #162d4a;
+                padding-left: 1rem;
+
+                &::before {
+                content: "";
+                    position: absolute;
+                    bottom: 0;
+                    left: 0;
+                    width: 4px;
+                    border-radius: 8px;
+                    height: 100%;
+                    background-color: #f97316;
+                    transition: width 0.3s ease;
+                }
+            }
+        }
+
+        &-info {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1.5rem;
+
+            &-edition {
+                display: flex;
+                flex-direction: column;
+                overflow: hidden;
+                border: 1px solid #e5e5e5;
+                border-radius: .25rem;
+
+                &_img {
+                    height: 12rem;
+                    width: 100%;
+                    border-bottom: 4px solid #fb923c;
+                    object-fit: cover;
+                    object-position: 0 16%;
+                }
+
+                &-content {
+                    padding: 1.25rem;
+
+                    &_title {
+                        color: #1e3a5f;
+                        font-size: 1.125rem;
+                        font-weight: 900;
+                        margin: 0;
+                        margin-bottom: .75rem;
+                    }
+
+                    &-detail {
+                        display: flex;
+                        flex-direction: column;
+                        color: #4b5563;
+                        font-size: .875rem;
+                        gap: .5rem;
+                        margin-bottom: 1rem;
+
+                        &_span {
+                            display: flex;
+                            align-items: center;
+                            gap: .25rem;
+                        }
+                    }
+
+                    &_description {
+                        color: #6b7280;
+                        line-height: 1.625;
+                        font-size: .875rem;
+                        margin: 0;
+                    }
+                }
+            }
+
+            &-form {
+                display: flex;
+                flex-direction: column;
+                border-radius: .25rem;
+                border: 1px solid #e5e5e5;
+                border-top: 2px solid #f97316;
+
+                &-head {
+                    border-bottom: 1px solid #e5e5e5;
+                    padding: 1.25rem;
+
+                    &_title {
+                        color: #1e3a5f;
+                        font-size: inherit;
+                        font-weight: 900;
+                        margin: 0;
+                    }
+
+                    &_subtitle {
+                        color: #9ca3af;
+                        font-weight: inherit;
+                        font-size: .75rem;
+                        line-height: 1rem;
+                        margin: 0;
+                        margin-top: .125rem;
+                    }
+                }
+
+                &-inscription {
+                    margin-top: 1rem;
+                    padding: 1.25rem;
+
+                    &-grid { 
+                        display: grid;
+                        grid-template-columns: repeat(2, 1fr);
+                        gap: 1rem;
+                        margin-bottom: 1rem;
+
+                        &_btn {
+                            margin-bottom: .75rem;
+                        }
+
+                        &-container {
+                            display: flex;
+                            flex-direction: column;
+
+                            &_label {
+                                color: #6b7280;
+                                text-transform: uppercase;
+                                font-weight: 700;
+                                font-size: .75rem;
+                                line-height: 1rem;
+                                margin-bottom: .25rem;
+                            }
+
+                            &_input {
+                                height: 2.25rem;
+                                font-size: .875rem;
+                                line-height: 1.25rem;
+                                padding: .25rem .75rem .25rem .75rem;
+                                border: 1px solid #e5e5e5;
+                                border-radius: .25rem;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

@@ -1,0 +1,31 @@
+.skill {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    padding: 1rem;
+    border: 1px solid #e5e7eb;
+    border-radius: .25rem;
+    border-left: 2px solid red;
+    transition: all 0.4s ease;
+
+    &:hover {
+        transform: translateY(-8px);
+        box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+    }
+
+    &_title {
+        color: #1e3a5f;
+        font-weight: 700;
+        font-size: .875rem;
+        line-height: 1.25rem;
+        margin: 0;
+        margin-top: .5rem;
+    }
+
+    &_description {
+        color: #6b7280;
+        line-height: 1.5;
+        font-size: .75rem;
+        margin: 0;
+    }
+}

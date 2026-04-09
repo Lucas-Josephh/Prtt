@@ -1,0 +1,13 @@
+@media (max-width: 1110px) {
+    .extranet-footer-element {
+        grid-template-columns: repeat(1, 1fr) !important;
+    }
+
+    .extranet-footer-element-section-content-container {
+        display: grid !important;
+        grid-template-columns: repeat(2, 1fr);
+        border-top: 1px solid #e5e7eb;
+        margin-top: 1.5rem;
+        padding-top: 1.5rem;
+    }
+}

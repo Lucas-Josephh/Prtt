@@ -1,0 +1,35 @@
+.extranet-tag {
+    &_default {
+        color: white;
+        font-size: 11px;
+        font-weight: 700;
+        text-transform: uppercase;
+        border-radius: 3px;
+        letter-spacing: 0.5px;
+        padding: 4px 8px 4px 8px;
+    }
+
+    // Tags basique
+    &_primary {
+        background-color: #f97316;
+    }
+
+    // Tags pour les news
+    &_match {
+        background-color: #3b82f6;
+    }
+
+    &_formation {
+        background-color: #f97316;
+    }
+
+    &_tournoi {
+        background-color: #8b5cf6;
+    }
+
+    &_club {
+        background-color: #10b981;
+    }
+
+    
+}

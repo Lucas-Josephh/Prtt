@@ -1,0 +1,18 @@
+*, body, *::before, *::after {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+}
+
+:root {
+  --nav-height: 2rem;
+}
+
+@media (max-width: 640px) {
+    :root {
+      --nav-height: 1rem;
+    }
+}

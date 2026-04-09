@@ -1,0 +1,11 @@
+@media (max-width: 1024px) {
+    .app-tournament-main-info {
+        grid-template-columns: repeat(1, 1fr) !important;
+    }
+}
+
+@media (max-width: 640px) {
+    .app-tournament-main-info-form-inscription-grid {
+        grid-template-columns: repeat(1, 1fr) !important;
+    }
+}

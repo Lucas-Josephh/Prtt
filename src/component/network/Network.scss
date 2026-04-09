@@ -1,0 +1,13 @@
+.extranet-network {
+
+    &-primary {
+        display: flex;
+        align-items: center;
+        background-color: #1e3a5f;
+        width: max-content;
+        height: max-content;
+        padding: .5rem;
+        border-radius: .25rem;
+        color: white;
+    }
+}
