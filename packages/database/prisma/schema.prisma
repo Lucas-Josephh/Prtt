@@ -8,10 +8,10 @@ datasource db {
 }
 
 model AdminUser {
-  id        String   @id @db.Char(32)
-  email     String   @unique @db.VarChar(191)
-  password  String   @db.VarChar(255)
-  createdAt DateTime @default(now()) @db.DateTime(3)
+  id         String   @id @db.Char(32)
+  identifier String   @unique @db.VarChar(191)
+  password   String   @db.VarChar(255)
+  createdAt  DateTime @default(now()) @db.DateTime(3)
 }
 
 model Desk {
