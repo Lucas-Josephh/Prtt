@@ -7,15 +7,78 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model NewsArticle {
-  id          Int      @id @default(autoincrement())
-  title       String   @db.VarChar(191)
-  content     String   @db.MediumText
-  category    String   @default("autre") @db.VarChar(32)
-  publishedAt DateTime? @db.DateTime(3)
+model AdminUser {
+  id         String   @id @db.Char(32)
+  identifier String   @unique @db.VarChar(191)
+  password   String   @db.VarChar(255)
+  createdAt  DateTime @default(now()) @db.DateTime(3)
+}
+
+model Desk {
+  id          String   @id @db.Char(32)
+  name        String   @db.VarChar(100)
+  surname     String   @db.VarChar(100)
+  email       String   @db.VarChar(191)
+  phone       String?  @db.VarChar(20)
+  description String?  @db.Text
   createdAt   DateTime @default(now()) @db.DateTime(3)
-  updatedAt   DateTime @updatedAt @db.DateTime(3)
+}
+
+model NewsArticle {
+  id          String    @id @db.Char(32)
+  title       String    @db.VarChar(191)
+  content     String    @db.MediumText
+  featured    Boolean   @default(false)
+  category    String    @default("autre") @db.VarChar(32)
+  publishedAt DateTime? @db.DateTime(3)
+  createdAt   DateTime  @default(now()) @db.DateTime(3)
 
   @@index([publishedAt])
 }
 
+model Tournament {
+  id        String   @id @db.Char(32)
+  title     String   @db.VarChar(191)
+  ja        String   @db.VarChar(191)
+  email     String   @db.VarChar(191)
+  phone     String   @db.VarChar(20)
+  startDate DateTime @db.DateTime(3)
+  endDate   DateTime @db.DateTime(3)
+  createdAt DateTime @default(now()) @db.DateTime(3)
+
+  tables Table[]
+}
+
+model Table {
+  id           String   @id @db.Char(32)
+  tournamentId String   @db.Char(32)
+  letter       String   @db.VarChar(10)
+  minimumCat   String   @db.VarChar(32)
+  maximumCat   String   @db.VarChar(32)
+  startAt      DateTime @db.DateTime(3)
+  maxPlayers   Int
+  createdAt    DateTime @default(now()) @db.DateTime(3)
+
+  tournament Tournament @relation(fields: [tournamentId], references: [id], onDelete: Cascade)
+  players    Player[]
+
+  @@unique([tournamentId, letter])
+}
+
+model Player {
+  id        String   @id @db.Char(32)
+  tableId   String   @db.Char(32)
+  name      String   @db.VarChar(100)
+  surname   String   @db.VarChar(100)
+  ranking   Int
+  category  String   @db.VarChar(32)
+  numbered  Int?
+  club      String   @db.VarChar(191)
+  email     String   @db.VarChar(191)
+  phone     String?  @db.VarChar(20)
+  createdAt DateTime @default(now()) @db.DateTime(3)
+
+  table Table @relation(fields: [tableId], references: [id], onDelete: Cascade)
+
+  @@index([tableId])
+}
