@@ -1,98 +1,63 @@
-# 🏓 PRTT Website – Perpignan Roussillon Tennis de Table
+# PRTT
 
-## 📌 Description
+Monorepo pnpm + Turborepo du site du Perpignan Roussillon Tennis de Table.
 
-Ce projet est le site officiel du **Perpignan Roussillon Tennis de Table (PRTT)**.
-Il a été entièrement refondu avec une nouvelle interface moderne, fluide et responsive, afin d’améliorer l’expérience utilisateur et la visibilité du club.
-
-Le projet est actuellement développé en **frontend avec Next.js**, et sera prochainement complété par une **API backend en NestJS** ainsi qu’une base de données **PostgreSQL**.
-
----
-
-## 🚀 Stack Technique
-
-### Frontend
-
-* Next.js
-* React
-* TypeScript
-* SCSS / CSS Modules
-
-### Backend (à venir)
-
-* NestJS
-* PostgreSQL
-
----
-
-## 🎯 Objectifs
-
-* Moderniser l’image du club
-* Offrir une navigation fluide et intuitive
-* Mettre en avant l’histoire, les actualités et les événements
-* Préparer une architecture scalable avec backend dédié
-
----
-
-## 📂 Structure du projet
+## Architecture
 
 ```
-/app          → Pages Next.js (App Router)
-/components   → Composants réutilisables
-/styles       → Fichiers SCSS / styles globaux
-/public       → Assets statiques (images, logos)
+apps/
+  web/        Frontend Next.js            → http://localhost:3000
+  api/        Backend NestJS (préfixe /api) → http://localhost:3001/api
+packages/
+  database/   Schéma Prisma (MySQL), migrations et client Prisma partagé (@prtt/database)
+docker-compose.yml   Base MySQL locale (port 3307)
+turbo.json           Orchestration des tâches (dev, build, lint, typecheck)
 ```
 
----
+L'API importe le client Prisma via `@prtt/database` (voir `apps/api/src/database/prisma.service.ts`).
 
-## 🛠️ Scripts disponibles
+## Prérequis
+
+- Node.js 20.11+
+- pnpm 10+
+- Docker (pour la base locale) ou un serveur MySQL 8 existant
+
+## Installation
 
 ```bash
-npm run dev       # Lance le serveur de développement
-npm run build     # Build de production
-npm run start     # Lance le build
-npm run lint      # Vérification du code
+pnpm install
+Copy-Item packages/database/.env.example packages/database/.env   # PowerShell
+pnpm db:up        # démarre MySQL dans Docker (port 3307)
+pnpm db:migrate   # applique les migrations + génère le client Prisma
+pnpm dev          # lance le front et l'API en parallèle
 ```
 
----
+Si Docker Hub n'est pas accessible, une image MariaDB déjà présente fonctionne aussi :
+`$env:DB_IMAGE="mariadb:latest"; docker compose up -d --wait`
 
-## 📸 Fonctionnalités principales
+Pour utiliser un MySQL existant, il suffit de modifier `DATABASE_URL` dans `packages/database/.env`.
 
-* Interface moderne et responsive
-* Composants dynamiques (timeline / histoire du club)
-* Gestion d’état pour sélection et affichage dynamique
-* Animations UI (transitions, interactions)
+Vérification : `http://localhost:3001/api/health` renvoie `{"status":"ok","database":"ok"}`.
 
----
+## Scripts
 
-## 🔮 Roadmap
+| Commande          | Rôle                                                       |
+| ----------------- | ---------------------------------------------------------- |
+| `pnpm dev`        | Front + API en mode watch                                  |
+| `pnpm build`      | Build de toutes les apps                                   |
+| `pnpm lint`       | ESLint sur toutes les apps                                 |
+| `pnpm typecheck`  | Vérification TypeScript                                    |
+| `pnpm db:up/down` | Démarre / arrête le conteneur MySQL                        |
+| `pnpm db:migrate` | Crée/applique une migration en dev (`prisma migrate dev`)  |
+| `pnpm db:deploy`  | Applique les migrations en production                      |
+| `pnpm db:generate`| Régénère le client Prisma                                  |
+| `pnpm db:studio`  | Interface Prisma Studio pour parcourir la base             |
 
-* [ ] Mise en place du backend avec NestJS
-* [ ] Connexion à PostgreSQL
-* [ ] Gestion des utilisateurs (admin / membres)
+## Base de données
 
----
+Le schéma (`packages/database/prisma/schema.prisma`) contient :
 
-## 🤝 Contribution
+- `NewsArticle` : actualités (texte)
+- `Tournament` / `TournamentParticipant` : participants et points par édition de tournoi
 
-Les contributions sont les bienvenues !
-
-1. Fork le projet
-2. Crée une branche (`feature/ma-feature`)
-3. Commit tes changements
-4. Push et ouvre une Pull Request
-
----
-
-## 📄 Licence
-
-Ce projet est sous licence MIT.
-
----
-
-## 👤 Auteur
-
-Développé dans le cadre du club **PRTT**
-Refonte complète de l’interface et architecture moderne orientée scalabilité.
-
----
+Aucune image n'est stockée en base. Après une modification du schéma : `pnpm db:migrate`.

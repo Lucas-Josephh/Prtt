@@ -1,0 +1,25 @@
+services:
+  mysql:
+    # MySQL 8.4 par défaut. Si Docker Hub est inaccessible, une image MariaDB
+    # locale fonctionne aussi : DB_IMAGE=mariadb:latest docker compose up -d
+    image: ${DB_IMAGE:-mysql:8.4}
+    container_name: prtt-mysql
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: prtt
+      MARIADB_ROOT_PASSWORD: root
+      MARIADB_DATABASE: prtt
+    command: ["--character-set-server=utf8mb4", "--collation-server=utf8mb4_unicode_ci"]
+    ports:
+      - "3307:3306"
+    volumes:
+      - prtt-mysql-data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD-SHELL", "mysqladmin ping -h 127.0.0.1 -uroot -proot || mariadb-admin ping -h 127.0.0.1 -uroot -proot"]
+      interval: 5s
+      timeout: 5s
+      retries: 30
+
+volumes:
+  prtt-mysql-data:

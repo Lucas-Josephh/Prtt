@@ -1,28 +1,21 @@
 {
-  "name": "mon-projet",
-  "version": "0.1.0",
+  "name": "prtt",
+  "version": "1.0.0",
   "private": true,
+  "packageManager": "pnpm@12.11.2",
   "scripts": {
-    "dev": "next dev",
-    "build": "next build",
-    "start": "next start",
-    "lint": "eslint",
-    "export": "next export"
-  },
-  "dependencies": {
-    "lucide-react": "^1.7.0",
-    "next": "16.2.1",
-    "react": "19.2.4",
-    "react-dom": "19.2.4",
-    "sass": "^1.98.0"
+    "dev": "turbo run dev",
+    "build": "turbo run build",
+    "lint": "turbo run lint",
+    "typecheck": "turbo run typecheck",
+    "db:generate": "pnpm --filter @prtt/database db:generate",
+    "db:migrate": "pnpm --filter @prtt/database db:migrate",
+    "db:up": "docker compose up -d --wait",
+    "db:down": "docker compose down",
+    "db:deploy": "pnpm --filter @prtt/database db:deploy",
+    "db:studio": "pnpm --filter @prtt/database db:studio"
   },
   "devDependencies": {
-    "@types/node": "^20",
-    "@types/react": "^19",
-    "@types/react-dom": "^19",
-    "babel-plugin-react-compiler": "1.0.0",
-    "eslint": "^9",
-    "eslint-config-next": "16.2.1",
-    "typescript": "^5"
+    "turbo": "^2.5.0"
   }
 }
