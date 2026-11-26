@@ -1,0 +1,13 @@
+@media (max-width: 640px) {
+    .app-login {
+        padding: 1rem;
+
+        &-card-head {
+            padding: 1.5rem 1rem 1rem !important;
+        }
+
+        &-card-form {
+            padding: 1.25rem 1rem !important;
+        }
+    }
+}

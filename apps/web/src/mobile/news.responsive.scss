@@ -10,6 +10,13 @@
             &_img {
                 width: 100% !important;
             }
+
+            &_placeholder {
+                width: 100% !important;
+                min-height: 14rem !important;
+                border-right: none !important;
+                border-bottom: 4px solid #fb923c !important;
+            }
         }
     }
 }

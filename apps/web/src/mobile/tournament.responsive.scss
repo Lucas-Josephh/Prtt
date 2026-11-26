@@ -8,4 +8,13 @@
     .app-tournament-main-info-form-inscription-grid {
         grid-template-columns: repeat(1, 1fr) !important;
     }
+
+    .app-tournament-main-admin {
+        flex-direction: column;
+        align-items: stretch !important;
+
+        &_create {
+            justify-content: center;
+        }
+    }
 }

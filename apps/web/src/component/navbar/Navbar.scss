@@ -60,6 +60,66 @@
         }
     }
 
+    &-right {
+        display: flex;
+        align-items: center;
+        height: 100%;
+        padding-right: 1rem;
+    }
+
+    // Éléments visibles uniquement par l'administrateur connecté
+    &-admin {
+        display: flex;
+        align-items: center;
+        gap: .75rem;
+        padding-left: 1rem;
+        margin-left: .5rem;
+        border-left: 1px solid rgba(255, 255, 255, 0.15);
+
+        &_badge {
+            display: flex;
+            align-items: center;
+            gap: .375rem;
+            padding: 4px 8px;
+            border-radius: 3px;
+            border: 1px solid rgba(249, 115, 22, 0.5);
+            background-color: rgba(249, 115, 22, 0.15);
+            color: #fb923c;
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            white-space: nowrap;
+            cursor: default;
+        }
+
+        &_logout {
+            display: flex;
+            align-items: center;
+            gap: .375rem;
+            padding: .375rem .75rem;
+            border-radius: .25rem;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            background-color: transparent;
+            color: #f9fafb;
+            font-size: .75rem;
+            font-weight: 600;
+            cursor: pointer;
+            white-space: nowrap;
+            transition: all 0.2s ease;
+
+            &:hover {
+                border-color: #f97316;
+                color: #fb923c;
+            }
+
+            &:disabled {
+                opacity: .6;
+                cursor: not-allowed;
+            }
+        }
+    }
+
     &-list{
         display: flex;
         list-style: none;
@@ -151,6 +211,64 @@
 
             &.open {
                 transform: translateX(0);
+            }
+
+            .navbar-mobile-admin {
+                display: flex;
+                flex-direction: column;
+                gap: .5rem;
+                padding: 16px 22px 22px;
+                border-top: 1px solid rgba(255, 255, 255, 0.07);
+
+                &_badge {
+                    display: flex;
+                    align-items: center;
+                    gap: .375rem;
+                    width: max-content;
+                    padding: 4px 8px;
+                    border-radius: 3px;
+                    border: 1px solid rgba(249, 115, 22, 0.5);
+                    background-color: rgba(249, 115, 22, 0.15);
+                    color: #fb923c;
+                    font-size: 11px;
+                    font-weight: 700;
+                    text-transform: uppercase;
+                    letter-spacing: 0.5px;
+                }
+
+                &_user {
+                    color: rgba(249, 250, 251, 0.4);
+                    font-size: 11px;
+                    word-break: break-all;
+                }
+
+                &_logout {
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    gap: .5rem;
+                    margin-top: .25rem;
+                    padding: 10px 14px;
+                    border-radius: 10px;
+                    border: 1px solid rgba(255, 255, 255, 0.15);
+                    background: rgba(255, 255, 255, 0.04);
+                    color: #f9fafb;
+                    font-size: 14px;
+                    font-weight: 600;
+                    cursor: pointer;
+                    transition: all 0.2s ease;
+
+                    &:hover {
+                        border-color: #f97316;
+                        color: #fb923c;
+                        background: rgba(249, 115, 22, 0.12);
+                    }
+
+                    &:disabled {
+                        opacity: .6;
+                        cursor: not-allowed;
+                    }
+                }
             }
 
             .navbar-mobile-topline {

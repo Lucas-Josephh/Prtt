@@ -6,6 +6,11 @@
         padding: .5rem 1rem .5rem 1rem;
         border-radius: .25rem;
         font-size: .875rem;
+
+        &:disabled {
+            opacity: .6;
+            cursor: not-allowed;
+        }
     }
 
     &-primary {

@@ -8,7 +8,7 @@ export default function Info({title, logo, line, color="#3b82f6", width, height}
                 {logo}<h1 className='extranet-info-container_title'>{title}</h1>
             </div>
             {line?.map((item, index) => (
-                <p key={index} className='extranet-info_description'>{item}</p>
+                <div key={index} className='extranet-info_description'>{item}</div>
             ))}
             
         </div>

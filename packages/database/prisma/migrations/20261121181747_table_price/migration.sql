@@ -1,0 +1,2 @@
+-- AlterTable
+ALTER TABLE `Table` ADD COLUMN `price` DECIMAL(6, 2) NOT NULL DEFAULT 0;

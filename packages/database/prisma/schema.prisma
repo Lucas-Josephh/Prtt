@@ -1,5 +1,7 @@
 generator client {
-  provider = "prisma-client-js"
+  provider      = "prisma-client-js"
+  // native : poste de développement ; rhel-openssl-3.0.x : fonctions Vercel (Amazon Linux 2023)
+  binaryTargets = ["native", "rhel-openssl-3.0.x"]
 }
 
 datasource db {
@@ -16,12 +18,22 @@ model AdminUser {
 
 model Desk {
   id          String   @id @db.Char(32)
+  /// Prénom
   name        String   @db.VarChar(100)
+  /// Nom de famille
   surname     String   @db.VarChar(100)
+  /// Rôle affiché (ex. « Présidente », « Trésorière / Commission financière »)
+  role        String   @db.VarChar(100)
+  /// Ordre d'affichage (croissant) ; le premier est mis en avant sur la page Bureau
+  position    Int      @default(0)
   email       String   @db.VarChar(191)
   phone       String?  @db.VarChar(20)
   description String?  @db.Text
+  /// Photo (chemin renvoyé par POST /api/uploads, ex. « /uploads/<id>.webp »)
+  imageUrl    String?  @db.VarChar(255)
   createdAt   DateTime @default(now()) @db.DateTime(3)
+
+  @@index([position])
 }
 
 model NewsArticle {
@@ -29,21 +41,33 @@ model NewsArticle {
   title       String    @db.VarChar(191)
   content     String    @db.MediumText
   featured    Boolean   @default(false)
+  /// true = article de présentation du tournoi (affiché sur la page Tournoi, pas dans les actualités)
+  tournament  Boolean   @default(false)
   category    String    @default("autre") @db.VarChar(32)
   publishedAt DateTime? @db.DateTime(3)
+  /// Image de couverture (chemin renvoyé par POST /api/uploads, ex. « /uploads/<id>.webp »)
+  imageUrl    String?   @db.VarChar(255)
   createdAt   DateTime  @default(now()) @db.DateTime(3)
 
   @@index([publishedAt])
+  @@index([tournament, createdAt])
 }
 
 model Tournament {
   id        String   @id @db.Char(32)
   title     String   @db.VarChar(191)
+  /// Nom du juge-arbitre
   ja        String   @db.VarChar(191)
-  email     String   @db.VarChar(191)
-  phone     String   @db.VarChar(20)
+  /// Email du juge-arbitre (facultatif)
+  email     String?  @db.VarChar(191)
+  /// Téléphone du juge-arbitre (facultatif)
+  phone     String?  @db.VarChar(20)
   startDate DateTime @db.DateTime(3)
   endDate   DateTime @db.DateTime(3)
+  /// Clôture des inscriptions : passé cette date, plus aucune inscription n'est acceptée
+  registrationEndAt DateTime @db.DateTime(3)
+  /// Nombre maximum de tableaux qu'un joueur peut choisir par jour (hors tableaux « en plus »)
+  tabMax    Int
   createdAt DateTime @default(now()) @db.DateTime(3)
 
   tables Table[]
@@ -57,6 +81,10 @@ model Table {
   maximumCat   String   @db.VarChar(32)
   startAt      DateTime @db.DateTime(3)
   maxPlayers   Int
+  /// Prix d'inscription au tableau, en euros (ex. 8.50). 0 par défaut pour les tableaux créés avant ce champ.
+  price        Decimal  @default(0) @db.Decimal(6, 2)
+  /// Tableau « en plus » : peut être choisi même si la limite de tableaux par jour (tabMax) est atteinte
+  extra        Boolean  @default(false)
   createdAt    DateTime @default(now()) @db.DateTime(3)
 
   tournament Tournament @relation(fields: [tournamentId], references: [id], onDelete: Cascade)
@@ -70,8 +98,9 @@ model Player {
   tableId   String   @db.Char(32)
   name      String   @db.VarChar(100)
   surname   String   @db.VarChar(100)
+  /// Numéro de licence FFTT
+  licence   String   @db.VarChar(20)
   ranking   Int
-  category  String   @db.VarChar(32)
   numbered  Int?
   club      String   @db.VarChar(191)
   email     String   @db.VarChar(191)
@@ -81,4 +110,18 @@ model Player {
   table Table @relation(fields: [tableId], references: [id], onDelete: Cascade)
 
   @@index([tableId])
+  /// Une même licence ne peut être inscrite qu'une fois dans un tableau
+  @@unique([tableId, licence])
+}
+
+/// Compteurs de la limite de tentatives (connexion, inscriptions, envoi d'images).
+/// En base et non en mémoire : sur Vercel, chaque requête peut être traitée par une instance différente.
+model RateLimit {
+  /// Clé calculée par @nestjs/throttler (route + adresse IP, hachées)
+  id        String   @id @db.VarChar(191)
+  hits      Int
+  /// Fin de la fenêtre de comptage
+  expiresAt DateTime @db.DateTime(3)
+
+  @@index([expiresAt])
 }

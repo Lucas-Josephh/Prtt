@@ -4,7 +4,7 @@ import Navbar from "@web/component/navbar/Navbar";
 import History from "@web/component/history/History";
 import './page.scss';
 import Image from "next/image";
-import { JSX, useState } from "react";
+import { JSX, useEffect, useState } from "react";
 import Card from "@web/component/card/Card";
 import Skill from "@web/component/skill/Skill";
 import { ArrowRight, Award, Heart, Map, MapPin, Target, Trophy, Users, Zap } from "lucide-react";
@@ -12,6 +12,13 @@ import Button from "@web/component/button/Button";
 import News from "@web/component/news/News";
 import Footer from "@web/component/footer/Footer";
 import { useRouter } from "next/navigation";
+import type { NewsArticle } from "@web/component/newsForm/NewsForm";
+import { apiFetch, imageSrc } from "@web/lib/api";
+
+const dateFormatter = new Intl.DateTimeFormat("fr-FR", { day: "numeric", month: "long", year: "numeric" });
+
+/** Nombre d'actualités affichées sur la page d'accueil */
+const HOME_NEWS_COUNT = 4;
 
 type HistoryType = {
   id?: string;
@@ -29,15 +36,6 @@ type SkillType = {
   title: string;
   description: string;
   color?: string;
-}
-
-type NewsType = {
-  type?: string;
-  src: string;
-  tagName: string;
-  date: string;
-  title: string;
-  description: string;
 }
 
 export default function Home() {
@@ -151,12 +149,25 @@ export default function Home() {
     {logo: <Map color="#06b6d4" />, color: "#06b6d4", title: "Ancrage local", description: "Salle Henri Blanc à Perpignan. Partenaire de la Ligue Occitanie de Tennis de Table."},
   ])
 
-  const [news] = useState<NewsType[]>([
-    {src: "/feminine.jpg", tagName: "tournoi", date: "31 mars 2026", title: "Belle journée pour les féminines au championnat régional", description: "Les joueuses du PRTT ont participé ce week-end au championnat régional, qui s’est tenu à Ferrière-sur-Ariège. À cette occasion, elles ont évolué avec leurs nouveaux maillots, généreusement offerts par nos sponsors Panther et Sushi Sakura.", },
-    {src: "/top.jpg", tagName: "tournoi", date: "31 mars 2026", title: "Top occitanie Poussin / Benjamin", description: "Ce samedi s'est déroulé le top occitanie réunissant les meilleurs poussins et Benjamins de la région. Et pour une fois c'est en pays catalan, à Canohes que cette rencontre se déroulait.\nDeux de nos jeunes étaient retenus pour cette compétition.\nAlienor DE SAINT MARTIN en catégorie Benjamine et Noi HUANG poussin surclassé en catégorie Benjamin.\nIls étaient coachés pour l'occasion par leur entraîneur Ivan MELEY.\nLeur combativité et leur sérieux leur ont permis d'obtenir de très bons résultats. Alienor termine Vice championne d'occitanie s'inclinant en finale. Noi est sacré champion d'occitanie Benjamin en n'étant que poussin. La preuve est que les entraînements payent.\nBravo à nos jeunes et à leur entraîneur pour le travail réalisé. La relève est assurée.\n\nVamos PRTT !"},
-    {src: "/criterium.jpg", tagName: "tournoi", date: "15 mars 2026", title: "Nos jeunes aux critériums pré-nationale", description: "Bilan de la pré-nationale : de belles performances pour le club avec Noï qui termine 9ᵉ en benjamin, Louis 8ᵉ en minime. En junior, Pénélope se classe 7ᵉ, Chloé réalise une très belle performance en montant sur la 2ᵉ marche du podium, et Gabriel prend la 4ᵉ place. Une compétition très positive pour l’ensemble du groupe, qui confirme les progrès de chacun et qui nous a offert un beau spectacle. Le coach est fière de la combativité et de l’engagement de ses athlètes 🏓💪", },
-    {src: "/open.png", tagName: "tournoi", date: "17 février 2026", title: "Lancement de l'open National du PRTT", description: "🏓 17e OPEN NATIONAL DE PERPIGNAN – Tennis de table\n23–24 mai 2026\nDeux jours de compétition, de perf’ et d’ambiance au soleil !📍\nPerpignan , Parc des sports\n✅ Inscriptions\nSMS / Téléphone : 06 33 54 55 59\nMail : prtt.tournois@gmail.com\nRèglement détaillé disponible sur : prtt.fr", },
-  ])
+  // Les 4 dernières actualités publiées (la plus récente en premier)
+  const [news, setNews] = useState<NewsArticle[]>([]);
+  useEffect(() => {
+    apiFetch<NewsArticle[]>(`/news?limit=${HOME_NEWS_COUNT}`)
+      .then(setNews)
+      .catch(() => setNews([]));
+  }, []);
+
+  // Les boutons « Tournoi » ne s'affichent que si un tournoi est créé (en cours ou à venir)
+  const [hasTournament, setHasTournament] = useState(false);
+  useEffect(() => {
+    apiFetch<{ tournament: unknown | null }>("/tournaments/current")
+      .then((current) => setHasTournament(current.tournament !== null))
+      .catch(() => setHasTournament(false));
+  }, []);
+
+  const tournamentButton = hasTournament && (
+    <Button variant="secondary" lib={`Tournoi ${new Date().getFullYear()}`} onClick={() => router.push("/tournoi")} />
+  );
 
   return (
     <div className="app-home">
@@ -186,7 +197,7 @@ export default function Home() {
 
           <div className="app-home-header-container-buttons">
             <Button variant="primary" lib="Voir nos équipes →" />
-            <Button variant="secondary" lib="Tournoi 2026" />
+            {tournamentButton}
             <Button variant="tertiary" lib="Nous rejoindre" />
           </div>
         </div>
@@ -260,7 +271,7 @@ export default function Home() {
       </div>
       <div className="app-home-links">
         <Button variant="primary" lib="Voir nos équipes →" />
-        <Button variant="secondary" lib="Tournoi 2026" />
+        {tournamentButton}
         <Button variant="tertiary" lib="Nous rejoindre" />
       </div>
 
@@ -270,9 +281,15 @@ export default function Home() {
       </div>
 
       <ul className="app-home-news">
-        {news.map((item: NewsType, index: number) => (
-          <li key={index}>
-            <News src={item.src} tagName={item.tagName} date={item.date} title={item.title} description={item.description} />
+        {news.map((article) => (
+          <li key={article.id}>
+            <News
+              src={imageSrc(article.imageUrl)}
+              tagName={article.category}
+              date={dateFormatter.format(new Date(article.publishedAt ?? article.createdAt))}
+              title={article.title}
+              description={article.content}
+            />
           </li>
         ))}
       </ul>

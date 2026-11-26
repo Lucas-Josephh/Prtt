@@ -2,6 +2,44 @@
 @use "../../mobile/desk.responsive.scss";
 
 .app-desk {
+    // Boutons Modifier / Supprimer, visibles uniquement par l'administrateur
+    &-actions {
+        display: flex;
+        gap: .25rem;
+
+        &_btn {
+            display: flex;
+            align-items: center;
+            gap: .25rem;
+            padding: 4px 8px;
+            border: 1px solid #e5e7eb;
+            border-radius: 3px;
+            background-color: white;
+            color: #1e3a5f;
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+
+            &:hover {
+                background-color: #f97316;
+                border-color: #f97316;
+                color: white;
+            }
+
+            &--danger {
+                color: #dc2626;
+
+                &:hover {
+                    background-color: #ef4444;
+                    border-color: #ef4444;
+                }
+            }
+        }
+    }
+
     &-header {
         width: 100%;
         background-color: #1e3a5f;
@@ -42,6 +80,40 @@
         margin-right: var(--nav-height);
         margin-top: 2rem;
 
+        // Visible uniquement par l'administrateur
+        &-toolbar {
+            display: flex;
+            justify-content: flex-end;
+            margin-bottom: 1rem;
+
+            &_add {
+                display: flex;
+                align-items: center;
+                gap: .375rem;
+                height: 40px;
+                padding: .5rem 1rem;
+                border: none;
+                border-radius: .25rem;
+                background-color: #f97316;
+                color: white;
+                font-size: .875rem;
+                font-weight: 700;
+                cursor: pointer;
+                white-space: nowrap;
+
+                &:hover {
+                    background-color: rgb(239, 105, 12);
+                }
+            }
+        }
+
+        &_status {
+            color: #9ca3af;
+            font-size: .875rem;
+            text-align: center;
+            margin: 3rem 0;
+        }
+
         &-boss {
             display: flex;
             align-items: center;
@@ -68,7 +140,16 @@
             }
 
             &-content {
+                flex: 1;
                 padding: 1.5rem;
+
+                &-head {
+                    display: flex;
+                    align-items: center;
+                    justify-content: space-between;
+                    flex-wrap: wrap;
+                    gap: .5rem;
+                }
 
                 &_title {
                     color: #1e3a5f;
@@ -117,9 +198,16 @@
                 }
 
                 &-support {
+                    position: relative;
                     display: flex;
                     justify-content: center;
                     align-items: center;
+
+                    .app-desk-actions {
+                        position: absolute;
+                        top: .5rem;
+                        right: .5rem;
+                    }
                     width: 100%;
                     height: 10rem;
                     background: linear-gradient(135deg, #d1d5db, #9ca3af);
@@ -128,6 +216,7 @@
                         width: 100%;
                         height: 100%;
                         border-bottom: 2px solid #fb923c;
+                        object-fit: cover;
                     }
                 }
 

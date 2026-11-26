@@ -3,11 +3,26 @@
 import Link from 'next/link';
 import './Navbar.scss';
 import Image from 'next/image';
-import { Menu } from 'lucide-react';
+import { LogOut, Menu, ShieldCheck } from 'lucide-react';
 import { useState } from 'react';
+import { useSession } from '@web/component/session/SessionProvider';
+import { useRouter } from 'next/navigation';
 
 export default function Navbar({select}: {select: string}) {
   const [navMobile, setNavMobile] = useState(false);
+  const [loggingOut, setLoggingOut] = useState(false);
+  const { session, logout } = useSession();
+  const router = useRouter();
+  const admin = session.status === "authenticated" ? session.user : null;
+
+  const handleLogout = async () => {
+    setLoggingOut(true);
+    await logout();
+    setLoggingOut(false);
+    setNavMobile(false);
+    // La connexion se fait sur l'application séparée (apps/login) : après déconnexion, on reste sur le site
+    router.push('/');
+  };
 
   return (
     <>
@@ -20,6 +35,7 @@ export default function Navbar({select}: {select: string}) {
             <h2 className='navbar-mark-info_subtitle'>Perpignan Roussillon TT</h2>
           </div>
         </Link>
+        <div className="navbar-right">
         <ul className="navbar-list">
           {['Accueil', 'Actualités', 'Bureau', 'Tournoi', 'Informations'].map((item: string, index: number) => (
             <li key={index} className="navbar-list-li">
@@ -29,7 +45,18 @@ export default function Navbar({select}: {select: string}) {
             </li>
           ))}
         </ul>
+        {admin && (
+          <div className="navbar-admin">
+            <span className="navbar-admin_badge" title={`Connecté en tant que ${admin.identifier}`}>
+              <ShieldCheck size={14} /> Mode admin
+            </span>
+            <button type="button" className="navbar-admin_logout" onClick={handleLogout} disabled={loggingOut}>
+              <LogOut size={14} /> {loggingOut ? "Déconnexion…" : "Déconnexion"}
+            </button>
+          </div>
+        )}
         <button className="navbar-mobile" onClick={() => setNavMobile(!navMobile)}><Menu /></button>
+        </div>
       </nav>
 
       {navMobile && (
@@ -66,6 +93,18 @@ export default function Navbar({select}: {select: string}) {
             </li>
           ))}
         </ul>
+
+        {admin && (
+          <div className="navbar-mobile-admin">
+            <span className="navbar-mobile-admin_badge">
+              <ShieldCheck size={14} /> Mode admin
+            </span>
+            <span className="navbar-mobile-admin_user">Connecté en tant que {admin.identifier}</span>
+            <button type="button" className="navbar-mobile-admin_logout" onClick={handleLogout} disabled={loggingOut}>
+              <LogOut size={16} /> {loggingOut ? "Déconnexion…" : "Déconnexion"}
+            </button>
+          </div>
+        )}
       </nav>
     </>
   );

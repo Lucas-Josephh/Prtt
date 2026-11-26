@@ -155,3 +155,132 @@
         }
     }
 }
+// Sélection, tableau complet, plusieurs jours
+.extranet-table {
+    max-height: 90vh;
+    display: flex;
+    flex-direction: column;
+
+    &-main {
+        gap: 1rem;
+        overflow-y: auto;
+
+        &_payment {
+            margin: 0;
+            color: #c2410c;
+            font-size: .75rem;
+            font-weight: 600;
+            text-align: center;
+        }
+
+        &_done {
+            height: 40px;
+            border: none;
+            border-radius: .25rem;
+            background-color: #1e3a5f;
+            color: white;
+            font-size: .875rem;
+            font-weight: 700;
+            cursor: pointer;
+
+            &:hover {
+                background-color: #143055;
+            }
+        }
+
+        &_empty {
+            color: #9ca3af;
+            font-size: .875rem;
+            text-align: center;
+            margin: 1rem 0;
+        }
+
+        &-list-li {
+            &--selected {
+                border-color: #f97316 !important;
+                background-color: #fff7ed;
+
+                .extranet-table-main-list-li-btn_num {
+                    background-color: #f97316;
+                    color: white;
+                }
+            }
+
+            &--disabled:not(&--selected) {
+                opacity: .6;
+
+                .extranet-table-main-list-li-btn {
+                    cursor: not-allowed;
+                }
+            }
+
+            &-btn-contain-content_price {
+                color: #1e3a5f;
+                font-size: .75rem;
+                font-weight: 700;
+                margin-left: auto;
+            }
+
+            &-btn-contain-content_extra {
+                color: white;
+                background-color: #8b5cf6;
+                font-size: 10px;
+                font-weight: 700;
+                text-transform: uppercase;
+                letter-spacing: .5px;
+                padding: 1px 6px;
+                border-radius: 3px;
+            }
+
+            &-btn-contain-content_reason {
+                color: #9ca3af;
+                font-size: .75rem;
+                font-style: italic;
+            }
+
+            &-btn-contain-content_number--full {
+                color: #dc2626 !important;
+            }
+        }
+    }
+}
+
+@media (max-width: 1024px) {
+    .extranet-table {
+        width: calc(100% - 2rem) !important;
+        max-width: 36rem;
+    }
+}
+
+// Le contenu prend toute la largeur pour aligner le prix à droite
+.extranet-table-main-list-li-btn-contain {
+    flex: 1;
+    min-width: 0;
+}
+
+// Alignement vertical des éléments d'une ligne de tableau (tag « En plus », prix, catégories)
+.extranet-table-main-list-li-btn-contain-content {
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.extranet-table-main-list-li-btn-contain-content_extra {
+    display: inline-flex;
+    align-items: center;
+    line-height: 1;
+    padding: 3px 6px !important;
+}
+
+// Zone qui défile : ses éléments (jours, bouton) ne doivent jamais être écrasés en hauteur
+.extranet-table-main {
+    min-height: 0;
+
+    > * {
+        flex-shrink: 0;
+    }
+
+    &_done {
+        min-height: 40px;
+        line-height: 1;
+    }
+}

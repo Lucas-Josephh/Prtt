@@ -38,6 +38,9 @@ yarn-error.log*
 .env*
 !.env.example
 
+# fichiers Excel des inscrits (données personnelles)
+apps/api/storage/
+
 # vercel
 .vercel
 

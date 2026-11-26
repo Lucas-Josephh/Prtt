@@ -1,19 +1,10 @@
-import { ValidationPipe } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
-import { NestFactory } from "@nestjs/core";
-import { AppModule } from "./app.module";
+import { createApp } from "./app.setup";
 
+/** Serveur local (développement, ou hébergeur Node classique). Sur Vercel, c'est serverless.ts qui est utilisé. */
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
-  const config = app.get(ConfigService);
-
-  app.setGlobalPrefix("api");
-  app.enableCors({
-    origin: config.get<string>("WEB_ORIGIN", "http://localhost:3000"),
-  });
-  app.useGlobalPipes(new ValidationPipe({ whitelist: true, transform: true }));
-
-  await app.listen(Number(config.get("API_PORT", 3001)));
+  const app = await createApp();
+  await app.listen(Number(app.get(ConfigService).get("API_PORT", 3001)));
 }
 
 void bootstrap();

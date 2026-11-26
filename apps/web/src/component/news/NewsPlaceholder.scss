@@ -1,0 +1,63 @@
+.extranet-news-placeholder {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: .5rem;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    background: linear-gradient(135deg, #1e3a5f 0%, #143055 60%, #0f2440 100%);
+    border-bottom: 4px solid #fb923c;
+
+    // Motif discret : deux cercles orange rappelant une balle de ping-pong
+    &::before,
+    &::after {
+        content: "";
+        position: absolute;
+        border-radius: 50%;
+        border: 2px solid rgba(251, 146, 60, 0.18);
+    }
+
+    &::before {
+        width: 9rem;
+        height: 9rem;
+        top: -3rem;
+        right: -2.5rem;
+    }
+
+    &::after {
+        width: 5rem;
+        height: 5rem;
+        bottom: -1.5rem;
+        left: -1.5rem;
+    }
+
+    // Avec photo : pas de motif décoratif, la photo remplit tout le cadre
+    &--photo::before,
+    &--photo::after {
+        display: none;
+    }
+
+    &_photo {
+        object-fit: cover;
+    }
+
+    &_logo {
+        position: relative;
+        z-index: 1;
+        border-radius: 50%;
+        border: 2px solid #fb923c;
+        object-fit: cover;
+    }
+
+    &_name {
+        position: relative;
+        z-index: 1;
+        color: #fff9;
+        font-size: .75rem;
+        font-weight: 900;
+        letter-spacing: .2em;
+    }
+}

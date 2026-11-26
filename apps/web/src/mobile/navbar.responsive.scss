@@ -6,6 +6,24 @@
     .navbar-mobile {
         display: block !important;
     }
+
+    // Sur mobile : le badge reste dans la barre, la déconnexion passe dans le menu latéral
+    .navbar-admin {
+        border-left: none !important;
+        margin-left: 0 !important;
+        padding-left: 0 !important;
+        margin-right: .75rem;
+
+        &_logout {
+            display: none !important;
+        }
+    }
+}
+
+@media (max-width: 380px) {
+    .navbar-admin {
+        display: none !important;
+    }
 }
 
 @media (min-width: 1024px) {
