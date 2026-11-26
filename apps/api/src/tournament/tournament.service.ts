@@ -63,7 +63,7 @@ export class TournamentService {
     try {
       return await this.createIfNoneInProgress(dto, startDate, endDate);
     } catch (error) {
-      // Conflit d'écriture entre deux créations simultanées (MySQL annule l'une des deux)
+      // Conflit d'écriture entre deux créations simultanées (PostgreSQL annule l'une des deux)
       if (error instanceof Prisma.PrismaClientKnownRequestError && error.code === "P2034") {
         throw new ConflictException("Un autre tournoi est en cours de création, réessayez dans un instant");
       }

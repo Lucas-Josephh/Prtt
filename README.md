@@ -9,8 +9,8 @@ apps/
   web/        Frontend Next.js            → http://localhost:3000
   api/        Backend NestJS (préfixe /api) → http://localhost:3001/api
 packages/
-  database/   Schéma Prisma (MySQL), migrations et client Prisma partagé (@prtt/database)
-docker-compose.yml   Base MySQL locale (port 3307)
+  database/   Schéma Prisma (PostgreSQL), migrations et client Prisma partagé (@prtt/database)
+docker-compose.yml   Base PostgreSQL locale (port 5434)
 turbo.json           Orchestration des tâches (dev, build, lint, typecheck)
 ```
 
@@ -20,14 +20,14 @@ L'API importe le client Prisma via `@prtt/database` (voir `apps/api/src/database
 
 - Node.js 20.11+
 - pnpm 10+
-- Docker (pour la base locale) ou un serveur MySQL 8 existant
+- Docker (pour la base locale) ou un serveur PostgreSQL existant (ex. Neon)
 
 ## Installation
 
 ```bash
 pnpm install
 Copy-Item packages/database/.env.example packages/database/.env   # PowerShell
-pnpm db:up        # démarre MySQL dans Docker (port 3307)
+pnpm db:up        # démarre PostgreSQL dans Docker (port 5434)
 pnpm db:migrate   # applique les migrations + génère le client Prisma
 pnpm dev          # lance le front et l'API en parallèle
 ```
@@ -35,7 +35,7 @@ pnpm dev          # lance le front et l'API en parallèle
 Si Docker Hub n'est pas accessible, une image MariaDB déjà présente fonctionne aussi :
 `$env:DB_IMAGE="mariadb:latest"; docker compose up -d --wait`
 
-Pour utiliser un MySQL existant, il suffit de modifier `DATABASE_URL` dans `packages/database/.env`.
+Pour utiliser un PostgreSQL existant, il suffit de modifier `DATABASE_URL` et `DATABASE_URL_UNPOOLED` dans `packages/database/.env`.
 
 Vérification : `http://localhost:3001/api/health` renvoie `{"status":"ok","database":"ok"}`.
 
@@ -47,7 +47,7 @@ Vérification : `http://localhost:3001/api/health` renvoie `{"status":"ok","data
 | `pnpm build`      | Build de toutes les apps                                   |
 | `pnpm lint`       | ESLint sur toutes les apps                                 |
 | `pnpm typecheck`  | Vérification TypeScript                                    |
-| `pnpm db:up/down` | Démarre / arrête le conteneur MySQL                        |
+| `pnpm db:up/down` | Démarre / arrête le conteneur PostgreSQL                      |
 | `pnpm db:migrate` | Crée/applique une migration en dev (`prisma migrate dev`)  |
 | `pnpm db:deploy`  | Applique les migrations en production                      |
 | `pnpm db:generate`| Régénère le client Prisma                                  |

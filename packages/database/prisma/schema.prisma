@@ -5,15 +5,18 @@ generator client {
 }
 
 datasource db {
-  provider = "mysql"
-  url      = env("DATABASE_URL")
+  provider  = "postgresql"
+  // Neon (via Vercel) fournit deux URL : DATABASE_URL passe par le pool de connexions (requêtes de l'API),
+  // DATABASE_URL_UNPOOLED est une connexion directe, nécessaire aux migrations. En local : la même URL.
+  url       = env("DATABASE_URL")
+  directUrl = env("DATABASE_URL_UNPOOLED")
 }
 
 model AdminUser {
   id         String   @id @db.Char(32)
   identifier String   @unique @db.VarChar(191)
   password   String   @db.VarChar(255)
-  createdAt  DateTime @default(now()) @db.DateTime(3)
+  createdAt  DateTime @default(now()) @db.Timestamptz(3)
 }
 
 model Desk {
@@ -31,7 +34,7 @@ model Desk {
   description String?  @db.Text
   /// Photo (chemin renvoyé par POST /api/uploads, ex. « /uploads/<id>.webp »)
   imageUrl    String?  @db.VarChar(255)
-  createdAt   DateTime @default(now()) @db.DateTime(3)
+  createdAt   DateTime @default(now()) @db.Timestamptz(3)
 
   @@index([position])
 }
@@ -39,15 +42,15 @@ model Desk {
 model NewsArticle {
   id          String    @id @db.Char(32)
   title       String    @db.VarChar(191)
-  content     String    @db.MediumText
+  content     String    @db.Text
   featured    Boolean   @default(false)
   /// true = article de présentation du tournoi (affiché sur la page Tournoi, pas dans les actualités)
   tournament  Boolean   @default(false)
   category    String    @default("autre") @db.VarChar(32)
-  publishedAt DateTime? @db.DateTime(3)
+  publishedAt DateTime? @db.Timestamptz(3)
   /// Image de couverture (chemin renvoyé par POST /api/uploads, ex. « /uploads/<id>.webp »)
   imageUrl    String?   @db.VarChar(255)
-  createdAt   DateTime  @default(now()) @db.DateTime(3)
+  createdAt   DateTime  @default(now()) @db.Timestamptz(3)
 
   @@index([publishedAt])
   @@index([tournament, createdAt])
@@ -62,13 +65,13 @@ model Tournament {
   email     String?  @db.VarChar(191)
   /// Téléphone du juge-arbitre (facultatif)
   phone     String?  @db.VarChar(20)
-  startDate DateTime @db.DateTime(3)
-  endDate   DateTime @db.DateTime(3)
+  startDate DateTime @db.Timestamptz(3)
+  endDate   DateTime @db.Timestamptz(3)
   /// Clôture des inscriptions : passé cette date, plus aucune inscription n'est acceptée
-  registrationEndAt DateTime @db.DateTime(3)
+  registrationEndAt DateTime @db.Timestamptz(3)
   /// Nombre maximum de tableaux qu'un joueur peut choisir par jour (hors tableaux « en plus »)
   tabMax    Int
-  createdAt DateTime @default(now()) @db.DateTime(3)
+  createdAt DateTime @default(now()) @db.Timestamptz(3)
 
   tables Table[]
 }
@@ -79,13 +82,13 @@ model Table {
   letter       String   @db.VarChar(10)
   minimumCat   String   @db.VarChar(32)
   maximumCat   String   @db.VarChar(32)
-  startAt      DateTime @db.DateTime(3)
+  startAt      DateTime @db.Timestamptz(3)
   maxPlayers   Int
   /// Prix d'inscription au tableau, en euros (ex. 8.50). 0 par défaut pour les tableaux créés avant ce champ.
   price        Decimal  @default(0) @db.Decimal(6, 2)
   /// Tableau « en plus » : peut être choisi même si la limite de tableaux par jour (tabMax) est atteinte
   extra        Boolean  @default(false)
-  createdAt    DateTime @default(now()) @db.DateTime(3)
+  createdAt    DateTime @default(now()) @db.Timestamptz(3)
 
   tournament Tournament @relation(fields: [tournamentId], references: [id], onDelete: Cascade)
   players    Player[]
@@ -105,7 +108,7 @@ model Player {
   club      String   @db.VarChar(191)
   email     String   @db.VarChar(191)
   phone     String?  @db.VarChar(20)
-  createdAt DateTime @default(now()) @db.DateTime(3)
+  createdAt DateTime @default(now()) @db.Timestamptz(3)
 
   table Table @relation(fields: [tableId], references: [id], onDelete: Cascade)
 
@@ -121,7 +124,7 @@ model RateLimit {
   id        String   @id @db.VarChar(191)
   hits      Int
   /// Fin de la fenêtre de comptage
-  expiresAt DateTime @db.DateTime(3)
+  expiresAt DateTime @db.Timestamptz(3)
 
   @@index([expiresAt])
 }

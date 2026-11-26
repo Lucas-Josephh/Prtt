@@ -37,7 +37,7 @@ export class PlayerAdminService {
     const words = query.trim().split(/\s+/).filter(Boolean).slice(0, 5);
     // Recherche vide : tous les inscrits du tournoi
 
-    // Chaque mot doit apparaître dans au moins un champ : « dupont jean » trouve Jean Dupont
+    // Chaque mot doit apparaître dans au moins un champ (sans tenir compte des majuscules) : « dupont jean » trouve Jean Dupont
     // groupBy (et non findMany + distinct) : la limite porte sur les joueurs, pas sur les lignes par tableau
     const matching = await this.prisma.player.groupBy({
       by: ["licence", "surname", "name"],
@@ -45,10 +45,10 @@ export class PlayerAdminService {
         table: { tournamentId },
         AND: words.map((word) => ({
           OR: [
-            { surname: { contains: word } },
-            { name: { contains: word } },
-            { licence: { contains: word } },
-            { club: { contains: word } },
+            { surname: { contains: word, mode: "insensitive" } },
+            { name: { contains: word, mode: "insensitive" } },
+            { licence: { contains: word, mode: "insensitive" } },
+            { club: { contains: word, mode: "insensitive" } },
           ],
         })),
       },
