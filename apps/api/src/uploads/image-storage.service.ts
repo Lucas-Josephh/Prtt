@@ -28,7 +28,7 @@ const LOCAL_PATH = /^\/uploads\/[0-9a-f]{32}\.webp$/;
 
 /**
  * Stockage des images, hors base de données.
- * - Avec BLOB_READ_WRITE_TOKEN (Vercel) : Vercel Blob, le disque d'une fonction Vercel n'étant pas conservé.
+ * - Avec BLOB_READ_WRITE_TOKEN ou BLOB_STORE_ID (Vercel) : Vercel Blob, le disque d'une fonction Vercel n'étant pas conservé.
  * - Sans : dossier UPLOADS_DIR sur le disque du serveur (développement local).
  * Chaque image est redimensionnée, convertie en WebP, débarrassée de ses métadonnées et nommée au hasard.
  */
@@ -37,16 +37,20 @@ export class ImageStorageService {
   private readonly logger = new Logger(ImageStorageService.name);
   /** Dossier des images sur le disque (utilisé uniquement sans Vercel Blob). */
   readonly directory: string;
+  /** Jeton Blob explicite ; sans lui, la bibliothèque utilise l'authentification OIDC de Vercel (BLOB_STORE_ID). */
   private readonly blobToken: string | undefined;
+  private readonly blobEnabled: boolean;
 
   constructor(config: ConfigService) {
     this.directory = resolve(config.get<string>("UPLOADS_DIR", "storage/images"));
     this.blobToken = config.get<string>("BLOB_READ_WRITE_TOKEN")?.trim() || undefined;
+    // Store Blob relié au projet Vercel : soit un jeton BLOB_READ_WRITE_TOKEN, soit BLOB_STORE_ID (+ jeton OIDC fourni par Vercel)
+    this.blobEnabled = this.blobToken !== undefined || Boolean(config.get<string>("BLOB_STORE_ID")?.trim());
   }
 
   /** Vrai si les images sont stockées sur Vercel Blob (sinon sur le disque). */
   get usesBlob(): boolean {
-    return this.blobToken !== undefined;
+    return this.blobEnabled;
   }
 
   /** Compresse et enregistre l'image ; renvoie le chemin à enregistrer en base. */
@@ -71,7 +75,7 @@ export class ImageStorageService {
 
     const name = `${randomBytes(16).toString("hex")}.webp`;
 
-    if (this.blobToken) {
+    if (this.blobEnabled) {
       const blob = await put(`uploads/${name}`, output, {
         access: "public",
         contentType: "image/webp",
@@ -94,7 +98,7 @@ export class ImageStorageService {
   async exists(path: string): Promise<boolean> {
     if (!IMAGE_PATH.test(path)) return false;
 
-    if (this.blobToken) {
+    if (this.blobEnabled) {
       if (LOCAL_PATH.test(path)) return false;
       try {
         // Échoue aussi pour une URL d'un autre « store » Blob que le nôtre
@@ -119,7 +123,7 @@ export class ImageStorageService {
   async remove(path: string | null | undefined): Promise<void> {
     if (!path || !IMAGE_PATH.test(path)) return;
 
-    if (this.blobToken) {
+    if (this.blobEnabled) {
       if (LOCAL_PATH.test(path)) return;
       try {
         await del(path, { token: this.blobToken });

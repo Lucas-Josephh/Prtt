@@ -43,6 +43,14 @@ export async function createApp(): Promise<NestExpressApplication> {
     });
   }
 
+  // Sur Vercel, l'environnement Node ajoute déjà `req.cookies` (cookies bruts, non vérifiés).
+  // cookie-parser ne fait alors plus rien (ni secret, ni cookies signés) : on retire cette propriété avant lui.
+  app.use((req: { cookies?: unknown }, _res: unknown, next: () => void) => {
+    if ("cookies" in req) {
+      Object.defineProperty(req, "cookies", { value: undefined, writable: true, configurable: true, enumerable: true });
+    }
+    next();
+  });
   // Cookies signés (HMAC-SHA256) avec SESSION_SECRET
   app.use(cookieParser(sessionSecret));
   // Deux fronts appellent l'API : le site du club (WEB_ORIGIN) et la page de connexion (LOGIN_ORIGIN, apps/login).

@@ -1,14 +1,17 @@
+import { randomBytes } from "node:crypto";
 import type { CookieOptions, Request, Response } from "express";
+import { Prisma } from "@prtt/database";
+import type { PrismaService } from "../database/prisma.service";
 
 export const SESSION_COOKIE = "prtt_session";
 
 /** Durée de vie de la session : 15 minutes, réinitialisée à chaque activité. */
 export const SESSION_TTL_MS = 15 * 60 * 1000;
 
-/** Contenu du cookie (signé par cookie-parser avec SESSION_SECRET). */
+/** Session valide, telle que vue par les routes protégées. */
 export interface SessionPayload {
-  /** Id de l'AdminUser */
-  sub: string;
+  /** Id de la session (table AdminSession) */
+  id: string;
   /** Date d'expiration (timestamp ms) */
   exp: number;
 }
@@ -42,11 +45,8 @@ function cookieOptions(): CookieOptions {
   };
 }
 
-/** Crée (ou prolonge) la session : nouveau cookie signé valable 15 min. */
-export function issueSession(res: Response, userId: string): SessionPayload {
-  const payload: SessionPayload = { sub: userId, exp: Date.now() + SESSION_TTL_MS };
-  res.cookie(SESSION_COOKIE, payload, cookieOptions());
-  return payload;
+function setSessionCookie(res: Response, id: string) {
+  res.cookie(SESSION_COOKIE, id, cookieOptions());
 }
 
 export function clearSession(res: Response) {
@@ -55,17 +55,57 @@ export function clearSession(res: Response) {
   res.clearCookie(SESSION_COOKIE, options);
 }
 
-/**
- * Lit le cookie signé. Renvoie null si absent, falsifié (signature invalide)
- * ou expiré côté serveur.
- */
-export function readSession(req: Request): SessionPayload | null {
+/** Id de session lu dans le cookie signé ; null si absent ou falsifié (signature invalide). */
+export function readSessionId(req: Request): string | null {
   const raw: unknown = req.signedCookies?.[SESSION_COOKIE];
-  if (!raw || typeof raw !== "object") return null;
+  return typeof raw === "string" && /^[0-9a-f]{64}$/.test(raw) ? raw : null;
+}
 
-  const { sub, exp } = raw as Partial<SessionPayload>;
-  if (typeof sub !== "string" || typeof exp !== "number") return null;
-  if (exp <= Date.now()) return null;
+/**
+ * Ouvre une session : enregistrée en base, l'id (aléatoire, 256 bits) part dans un cookie signé.
+ * Au passage, supprime les sessions expirées.
+ */
+export async function openSession(prisma: PrismaService, res: Response, adminId: string): Promise<SessionPayload> {
+  const id = randomBytes(32).toString("hex");
+  const expiresAt = new Date(Date.now() + SESSION_TTL_MS);
+  await prisma.adminSession.create({ data: { id, adminId, expiresAt } });
+  await prisma.adminSession.deleteMany({ where: { expiresAt: { lt: new Date() } } }).catch(() => undefined);
+  setSessionCookie(res, id);
+  return { id, exp: expiresAt.getTime() };
+}
 
-  return { sub, exp };
+/**
+ * Vérifie la session du cookie et la prolonge de 15 min.
+ * Renvoie null si elle n'existe plus en base (déconnexion), a expiré ou si le cookie est absent / falsifié.
+ */
+export async function touchSession(
+  prisma: PrismaService,
+  req: Request,
+  res: Response,
+): Promise<{ session: SessionPayload; user: SessionUser } | null> {
+  const id = readSessionId(req);
+  if (!id) return null;
+
+  const expiresAt = new Date(Date.now() + SESSION_TTL_MS);
+  try {
+    // Une seule requête : ne prolonge que si la session existe encore et n'a pas expiré
+    const updated = await prisma.adminSession.update({
+      where: { id, expiresAt: { gt: new Date() } },
+      data: { expiresAt },
+      select: { admin: { select: { id: true, identifier: true } } },
+    });
+    setSessionCookie(res, id);
+    return { session: { id, exp: expiresAt.getTime() }, user: updated.admin };
+  } catch (error) {
+    // P2025 : aucune session correspondante (supprimée à la déconnexion, ou expirée)
+    if (error instanceof Prisma.PrismaClientKnownRequestError && error.code === "P2025") return null;
+    throw error;
+  }
+}
+
+/** Déconnexion : supprime la session en base (le cookie devient inutilisable) et efface le cookie. */
+export async function closeSession(prisma: PrismaService, req: Request, res: Response): Promise<void> {
+  const id = readSessionId(req);
+  if (id) await prisma.adminSession.deleteMany({ where: { id } });
+  clearSession(res);
 }

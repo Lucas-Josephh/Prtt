@@ -114,6 +114,13 @@ export class CreateTournamentDto {
   @MaxLength(20, { message: "Le téléphone du JA ne doit pas dépasser 20 caractères" })
   phone?: string | null;
 
+  /** Adresse de la salle (obligatoire) : affichée sur le site et dans le mail de confirmation */
+  @Transform(trim)
+  @IsString({ message: "L'adresse de la salle doit être un texte" })
+  @IsNotEmpty({ message: "L'adresse de la salle est obligatoire" })
+  @MaxLength(255, { message: "L'adresse de la salle ne doit pas dépasser 255 caractères" })
+  address!: string;
+
   @IsDateString({}, { message: "La date de début est invalide" })
   startDate!: string;
 

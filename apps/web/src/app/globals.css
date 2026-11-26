@@ -7,6 +7,24 @@ body {
   font-family: Arial, sans-serif;
 }
 
+/* Chaque page occupe au moins toute la hauteur de l'écran : le footer reste collé en bas,
+   même quand le contenu est court. */
+body > div:not([hidden]) {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  min-height: 100dvh;
+}
+
+body > div:not([hidden]) > .extranet-footer {
+  margin-top: auto;
+}
+
+/* Écart conservé entre le contenu et le footer (auparavant porté par le footer) */
+body > div:not([hidden]) > :has(+ .extranet-footer) {
+  margin-bottom: 4rem;
+}
+
 :root {
   --nav-height: 2rem;
 }

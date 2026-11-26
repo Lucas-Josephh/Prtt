@@ -3,7 +3,7 @@
 import Navbar from '@web/component/navbar/Navbar'
 import './page.scss'
 import Tag from '@web/component/tag/Tag'
-import { Calendar, CalendarClock, Clock, FilePlus, FileSpreadsheet, LayoutGrid, ListChecks, Mail, Pencil, Phone, Plus, Trash2, UserRound, Users } from 'lucide-react'
+import { Calendar, CalendarClock, Clock, FilePlus, FileSpreadsheet, LayoutGrid, ListChecks, Mail, MapPin, Pencil, Phone, Plus, Trash2, UserRound, Users } from 'lucide-react'
 import Footer from '@web/component/footer/Footer'
 import RegistrationForm from '@web/component/registrationForm/RegistrationForm'
 import NewsPlaceholder from '@web/component/news/NewsPlaceholder'
@@ -212,6 +212,7 @@ export default function Tournoi() {
                                         </div>
                                         <div className='app-tournament-main-info-edition-content-detail'>
                                             <span className='app-tournament-main-info-edition-content-detail_span'><Calendar size="14" color='#fb923c' /> {formatRange(tournament.startDate, tournament.endDate)}</span>
+                                            <span className='app-tournament-main-info-edition-content-detail_span'><MapPin size="14" color='#fb923c' /> {tournament.address}</span>
                                             <span className='app-tournament-main-info-edition-content-detail_span'><LayoutGrid size="14" color='#fb923c' /> {tournament.tables.length} tableau{tournament.tables.length > 1 ? "x" : ""}</span>
                                             <span className='app-tournament-main-info-edition-content-detail_span'><ListChecks size="14" color='#fb923c' /> {tournament.tabMax} tableau{tournament.tabMax > 1 ? "x" : ""} maximum par jour</span>
                                             <span className='app-tournament-main-info-edition-content-detail_span'><Clock size="14" color='#fb923c' /> Inscriptions jusqu&apos;au {closingFormatter.format(new Date(tournament.registrationEndAt))}</span>

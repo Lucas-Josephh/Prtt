@@ -40,6 +40,8 @@ export default function SessionProvider({ children }: { children: React.ReactNod
     const [session, setSession] = useState<SessionState>({ status: "loading" });
     const lastRefresh = useRef(0);
     const pendingRefresh = useRef<ReturnType<typeof setTimeout> | null>(null);
+    // Incrémenté à la déconnexion : une réponse /auth/me ou /auth/refresh partie avant est alors ignorée
+    const generation = useRef(0);
 
     const setAuthenticated = useCallback((data: SessionResponse) => {
         lastRefresh.current = Date.now();
@@ -47,14 +49,20 @@ export default function SessionProvider({ children }: { children: React.ReactNod
     }, []);
 
     const logout = useCallback(async () => {
-        await apiFetch("/auth/logout", { method: "POST" }).catch(() => undefined);
+        // Retire immédiatement les droits côté site et annule toute prolongation en attente
+        generation.current += 1;
+        if (pendingRefresh.current) clearTimeout(pendingRefresh.current);
+        pendingRefresh.current = null;
         setSession({ status: "anonymous" });
+        // Supprime la session côté serveur : le cookie ne donne plus aucun droit, même s'il en reste une copie
+        await apiFetch("/auth/logout", { method: "POST" }).catch(() => undefined);
     }, []);
 
     // Récupère la session existante au chargement
     useEffect(() => {
+        const gen = generation.current;
         apiFetch<SessionResponse>("/auth/me")
-            .then(setAuthenticated)
+            .then((data) => { if (gen === generation.current) setAuthenticated(data); })
             .catch(() => setSession({ status: "anonymous" }));
     }, [setAuthenticated]);
 
@@ -68,8 +76,9 @@ export default function SessionProvider({ children }: { children: React.ReactNod
         const refresh = () => {
             pendingRefresh.current = null;
             lastRefresh.current = Date.now();
+            const gen = generation.current;
             apiFetch<SessionResponse>("/auth/refresh", { method: "POST" })
-                .then(setAuthenticated)
+                .then((data) => { if (gen === generation.current) setAuthenticated(data); })
                 .catch(() => setSession({ status: "anonymous" }));
         };
 

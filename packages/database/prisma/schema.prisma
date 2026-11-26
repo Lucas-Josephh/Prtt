@@ -17,6 +17,21 @@ model AdminUser {
   identifier String   @unique @db.VarChar(191)
   password   String   @db.VarChar(255)
   createdAt  DateTime @default(now()) @db.Timestamptz(3)
+  sessions   AdminSession[]
+}
+
+/// Session d'administration ouverte. Le cookie ne contient que l'id (signé) :
+/// supprimer la ligne (déconnexion) rend le cookie inutilisable, même s'il en reste une copie.
+model AdminSession {
+  id        String    @id @db.Char(64)
+  adminId   String    @db.Char(32)
+  admin     AdminUser @relation(fields: [adminId], references: [id], onDelete: Cascade)
+  /// Fin de validité, repoussée de 15 min à chaque activité
+  expiresAt DateTime  @db.Timestamptz(3)
+  createdAt DateTime  @default(now()) @db.Timestamptz(3)
+
+  @@index([adminId])
+  @@index([expiresAt])
 }
 
 model Desk {
@@ -65,6 +80,8 @@ model Tournament {
   email     String?  @db.VarChar(191)
   /// Téléphone du juge-arbitre (facultatif)
   phone     String?  @db.VarChar(20)
+  /// Adresse de la salle où se déroule le tournoi (affichée sur le site et dans le mail de confirmation)
+  address   String   @db.VarChar(255)
   startDate DateTime @db.Timestamptz(3)
   endDate   DateTime @db.Timestamptz(3)
   /// Clôture des inscriptions : passé cette date, plus aucune inscription n'est acceptée

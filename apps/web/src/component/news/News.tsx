@@ -1,15 +1,15 @@
 import Image from 'next/image'
-import './News.scss'
 import { Calendar, Pencil, Trash2 } from 'lucide-react'
 import Tag from '../tag/Tag'
 import NewsPlaceholder from './NewsPlaceholder'
+import './News.scss'
 
 /**
  * `src={null}` : actualité sans photo, un visuel de remplacement prend sa place
  * pour garder le format photo + texte.
  * `onEdit` / `onDelete` : affichent les boutons « Modifier » / « Supprimer » (réservés à l'admin).
  */
-export default function News({type="card", src="/header.jpg", imgWidth="100%", imgHeight="9rem", tagName, date, title, description, badge, onEdit, onDelete}: {type?: "card" | "template", src?: string | null, imgWidth?: string, imgHeight?: string,  tagName: string, date: string, title: string, description: string, badge?: string, onEdit?: () => void, onDelete?: () => void}) {
+export default function News({type="card", src="/header.png", imgWidth="100%", imgHeight="9rem", tagName, date, title, description, badge, onEdit, onDelete}: {type?: "card" | "template", src?: string | null, imgWidth?: string, imgHeight?: string,  tagName: string, date: string, title: string, description: string, badge?: string, onEdit?: () => void, onDelete?: () => void}) {
     return (
         <div className='extranet-news'>
             <div className='extranet-news-img' style={{width: `${imgWidth}`, height: `${imgHeight}`}}>

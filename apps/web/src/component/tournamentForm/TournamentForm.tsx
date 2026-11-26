@@ -35,6 +35,8 @@ export interface Tournament {
     email: string | null
     /** Téléphone du JA (facultatif) */
     phone: string | null
+    /** Adresse de la salle */
+    address: string
     startDate: string
     endDate: string
     /** Clôture des inscriptions */
@@ -66,7 +68,7 @@ interface TableRow {
     extra: boolean
 }
 
-type TournamentField = "title" | "ja" | "email" | "phone" | "startDate" | "endDate" | "registrationEndAt" | "tabMax"
+type TournamentField = "title" | "address" | "ja" | "email" | "phone" | "startDate" | "endDate" | "registrationEndAt" | "tabMax"
 type TableField = "letter" | "minimumCat" | "maximumCat" | "day" | "time" | "maxPlayers" | "price"
 interface Errors {
     fields: Partial<Record<TournamentField, string>>
@@ -130,11 +132,11 @@ export default function TournamentForm({ tournament, onClose, onSaved }: { tourn
     const editing = !!tournament
     const [values, setValues] = useState<Record<TournamentField, string>>(() => tournament
         ? {
-            title: tournament.title, ja: tournament.ja, email: tournament.email ?? "", phone: tournament.phone ?? "",
+            title: tournament.title, address: tournament.address, ja: tournament.ja, email: tournament.email ?? "", phone: tournament.phone ?? "",
             startDate: toInputDay(tournament.startDate), endDate: toInputDay(tournament.endDate),
             registrationEndAt: toInputDateTime(tournament.registrationEndAt), tabMax: String(tournament.tabMax),
         }
-        : { title: "", ja: "", email: "", phone: "", startDate: "", endDate: "", registrationEndAt: "", tabMax: DEFAULT_TAB_MAX })
+        : { title: "", address: "", ja: "", email: "", phone: "", startDate: "", endDate: "", registrationEndAt: "", tabMax: DEFAULT_TAB_MAX })
     const [rows, setRows] = useState<TableRow[]>(() => tournament
         ? tournament.tables.map((t, index) => ({
             key: index, id: t.id, players: t._count.players, letter: t.letter, minimumCat: t.minimumCat,
@@ -216,6 +218,7 @@ export default function TournamentForm({ tournament, onClose, onSaved }: { tourn
         const result = noErrors()
         const f = result.fields
         if (!values.title.trim()) f.title = "Le titre est obligatoire"
+        if (!values.address.trim()) f.address = "L'adresse de la salle est obligatoire"
         if (!values.ja.trim()) f.ja = "Le nom du JA est obligatoire"
         // Email et téléphone du JA : facultatifs, mais vérifiés s'ils sont renseignés
         if (values.email.trim() && !EMAIL_REGEX.test(values.email.trim())) f.email = "L'email du JA est invalide"
@@ -274,6 +277,7 @@ export default function TournamentForm({ tournament, onClose, onSaved }: { tourn
                 method: tournament ? "PATCH" : "POST",
                 body: JSON.stringify({
                     title: values.title.trim(),
+                    address: values.address.trim(),
                     ja: values.ja.trim(),
                     email: values.email.trim() || null,
                     phone: values.phone.trim() || null,
@@ -410,6 +414,10 @@ export default function TournamentForm({ tournament, onClose, onSaved }: { tourn
 
                     <h2 className="extranet-tournament-form_section">Le tournoi</h2>
                     {field("title", "Titre *", { placeholder: "Ex : 18e Open National de Perpignan", maxLength: 191 })}
+                    {field("address", "Adresse de la salle *", {
+                        placeholder: "Ex : Salle Henri Blanc, 15 Rue du Tennis de Table, 66000 Perpignan", maxLength: 255,
+                        hint: "Affichée sur la page du tournoi et dans le mail de confirmation",
+                    })}
                     <div className="extranet-modal-main-grid">
                         {field("startDate", "Début *", { type: "date", min: startMin })}
                         {field("endDate", "Fin *", { type: "date", min: endMin })}

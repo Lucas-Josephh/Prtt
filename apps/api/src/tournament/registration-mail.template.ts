@@ -20,6 +20,8 @@ export interface RegistrationMailData {
     ja: string;
     email: string | null;
     phone: string | null;
+    /** Adresse de la salle, saisie à la création du tournoi */
+    address: string;
   };
   player: {
     name: string;
@@ -43,8 +45,8 @@ const GREY = "#6b7280";
 const BORDER = "#e5e7eb";
 const FONT = "'Segoe UI', Roboto, Helvetica, Arial, sans-serif";
 
-const VENUE = "Salle Henri Blanc, 66000 Perpignan";
-const VENUE_MAP = "https://www.google.com/maps/search/?api=1&query=Salle+Henri+Blanc+Perpignan";
+/** Lien Google Maps vers l'adresse de la salle du tournoi. */
+const mapUrl = (address: string) => `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(address)}`;
 const CLUB = "Perpignan Roussillon Tennis de Table";
 
 const TZ = "Europe/Paris";
@@ -199,7 +201,7 @@ export function registrationMailHtml(data: RegistrationMailData): string {
             <div style="width:64px;height:64px;line-height:64px;border-radius:50%;background:#dcfce7;color:#16a34a;font-size:32px;font-weight:900;text-align:center;margin:0 auto;">✓</div>
             <h1 style="margin:18px 0 6px;color:${NAVY};font-size:26px;line-height:1.25;font-weight:900;">Votre inscription est confirmée&nbsp;!</h1>
             <div style="color:${ORANGE};font-size:16px;font-weight:800;">${e(tournament.title)}</div>
-            <div style="color:${GREY};font-size:14px;margin-top:4px;">${e(tournamentDates(tournament.startDate, tournament.endDate))} · ${VENUE}</div>
+            <div style="color:${GREY};font-size:14px;margin-top:4px;">${e(tournamentDates(tournament.startDate, tournament.endDate))} · ${e(tournament.address)}</div>
           </td>
         </tr>
 
@@ -251,7 +253,7 @@ ${card("👤 Vos informations", [
               </tr>
               <tr>
                 <td style="padding:0 20px 14px;">
-                  <table role="presentation" width="100%" cellpadding="0" cellspacing="0">${tip("📍", "Lieu", `${VENUE} · <a href="${VENUE_MAP}" style="color:${ORANGE};font-weight:700;text-decoration:none;">Voir l'itinéraire →</a>`)}${first ? tip("⏰", "Votre premier tableau", `${e(dayLong(first.startAt))} à <strong>${time(first.startAt)}</strong> (tableau ${e(first.letter)}). Présentez-vous à la table d'arbitrage 30min avant le début du tableau.`) : ""}${tip("💶", "Règlement", `${total > 0 ? `<strong>${euros(total)}</strong> à régler sur place` : "Aucun montant à régler"}, le jour du tournoi.`)}
+                  <table role="presentation" width="100%" cellpadding="0" cellspacing="0">${tip("📍", "Lieu", `${e(tournament.address)} · <a href="${e(mapUrl(tournament.address))}" style="color:${ORANGE};font-weight:700;text-decoration:none;">Voir l'itinéraire →</a>`)}${first ? tip("⏰", "Votre premier tableau", `${e(dayLong(first.startAt))} à <strong>${time(first.startAt)}</strong> (tableau ${e(first.letter)}). Présentez-vous à la table d'arbitrage 30min avant le début du tableau.`) : ""}${tip("💶", "Règlement", `${total > 0 ? `<strong>${euros(total)}</strong> à régler sur place` : "Aucun montant à régler"}, le jour du tournoi.`)}
                   </table>
                 </td>
               </tr>
@@ -272,7 +274,7 @@ ${card("👤 Vos informations", [
         <tr>
           <td align="center" style="background:#f9fafb;border-top:1px solid ${BORDER};padding:18px 24px;color:#9ca3af;font-size:12px;line-height:1.6;">
             🏓 <strong style="color:${NAVY};">PRTT</strong> – ${CLUB}<br>
-            ${VENUE}<br>
+            ${e(tournament.address)}<br>
             Vous recevez ce mail car vous vous êtes inscrit(e) au tournoi sur le site du club.
           </td>
         </tr>
@@ -293,7 +295,7 @@ export function registrationMailText(data: RegistrationMailData): string {
     `Bonjour ${player.name},`,
     "",
     `Votre inscription au tournoi « ${tournament.title} » est confirmée !`,
-    `${tournamentDates(tournament.startDate, tournament.endDate)} · ${VENUE}`,
+    `${tournamentDates(tournament.startDate, tournament.endDate)} · ${tournament.address}`,
     "",
     `MONTANT À RÉGLER SUR PLACE : ${total > 0 ? euros(total) : "gratuit"} (le jour du tournoi, à la table d'accueil)`,
     "",
@@ -318,7 +320,7 @@ export function registrationMailText(data: RegistrationMailData): string {
     ...(player.phone ? [`  Téléphone : ${player.phone}`] : []),
     "",
     "LE JOUR DU TOURNOI",
-    `  Lieu : ${VENUE} (${VENUE_MAP})`,
+    `  Lieu : ${tournament.address} (${mapUrl(tournament.address)})`,
     "",
     "Une question ou une erreur ? Répondez à ce mail ou contactez le juge-arbitre :",
     `  ${[tournament.ja, tournament.email, tournament.phone].filter(Boolean).join(" · ")}`,

@@ -5,7 +5,8 @@
     width: 100%;
     background-color: #1e3a5f;
     padding: 2.5rem 1.5rem 2.5rem 1.5rem;
-    margin-top: 4rem;
+    // Poussé tout en bas de la page (voir globals.css)
+    margin-top: auto;
 
     &-element {
         display: grid;
